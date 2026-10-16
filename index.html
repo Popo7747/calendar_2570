@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ปฏิทินกิจกรรม: การส่งงานด้านประกันคุณภาพและความเสี่ยง ปีงบประมาณ 2570</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Sarabun', sans-serif;
+    }
+    .calendar-cell {
+      min-height: 105px;
+    }
+    .tu-red {
+      color: #990000;
+    }
+    .bg-tu-red {
+      background-color: #990000;
+    }
+    .border-tu-red {
+      border-color: #990000;
+    }
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col">
+
+  <!-- Header Section styled exactly like the attached image -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+        <!-- Brand Title with Red Vertical Bar -->
+        <div class="flex items-center space-x-3">
+          <div class="w-1.5 h-8 bg-tu-red rounded-full"></div>
+          <div>
+            <h1 class="text-2xl font-bold tracking-tight text-slate-900 flex items-center gap-2">
+              ปฏิทินกิจกรรม
+              <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-red-100 text-red-800 border border-red-200">
+                ปีงบประมาณ 2570
+              </span>
+            </h1>
+            <p class="text-xs text-slate-500 font-medium">
+              งานยุทธศาสตร์กิจการนักศึกษา กองกิจการนักศึกษา มหาวิทยาลัยธรรมศาสตร์ (ข้อมูลจากกองพัฒนาคุณภาพ)
+            </p>
+          </div>
+        </div>
+
+        <!-- Right Quick Actions: View Toggle and Search -->
+        <div class="flex flex-wrap items-center gap-2">
+          <!-- View Toggle: Month Grid vs Table View -->
+          <div class="inline-flex rounded-lg border border-slate-200 bg-slate-100 p-0.5 text-xs font-medium">
+            <button id="viewMonthBtn" class="flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-white text-slate-900 shadow-sm transition">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+              </svg>
+              <span>ปฏิทินรายเดือน</span>
+            </button>
+            <button id="viewTableBtn" class="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-slate-600 hover:text-slate-900 transition">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path>
+              </svg>
+              <span>ตารางสรุปภาพรวม</span>
+            </button>
+          </div>
+
+          <button id="adminBtn" type="button" aria-label="เปิดหน้าจัดการสำหรับแอดมิน" title="แอดมิน: เพิ่ม / แก้ไขข้อมูล" class="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-tu-red text-white text-xs font-semibold">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21v-2a8 8 0 0116 0v2"/></svg><span>แอดมิน</span>
+          </button>
+          <!-- Reset Filter / Today -->
+          <button id="todayBtn" class="px-3 py-1.5 text-xs font-semibold rounded-lg border border-slate-300 text-slate-700 bg-white hover:bg-slate-50 transition">
+            เดือนปัจจุบัน
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="max-w-7xl mx-auto px-4 w-full py-2 flex items-center gap-3"><p id="connectionStatus" role="status" class="text-sm text-slate-600">กำลังเชื่อมต่อฐานข้อมูล…</p><button id="reloadData" type="button" class="text-sm underline">โหลดข้อมูลใหม่</button></div>
+  <dialog id="loginDialog" class="admin-dialog" aria-labelledby="loginHeading">
+    <h2 id="loginHeading">เข้าสู่ระบบแอดมิน</h2><p class="admin-note">ใช้บัญชีที่ผู้ดูแลระบบสร้างให้ หากลืมรหัสผ่าน กรุณาติดต่อผู้ดูแลระบบ</p>
+    <form id="loginForm"><label>อีเมล<input type="email" name="email" autocomplete="username" required></label><label>รหัสผ่าน<input type="password" name="password" autocomplete="current-password" required></label><p id="loginStatus" role="alert" class="admin-note"></p><div class="admin-actions"><button type="submit" class="primary">เข้าสู่ระบบ</button><button type="button" id="loginClose">ยกเลิก</button></div></form>
+  </dialog>
+  <!-- Main Content Container -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex-1 w-full">
+
+    <!-- Filter Pills & Category Switcher -->
+    <div class="mb-4 bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm flex flex-wrap items-center justify-between gap-3">
+      <div class="flex flex-wrap items-center gap-2">
+        <span class="text-xs font-semibold text-slate-500 mr-1">กรองหมวดหมู่:</span>
+        <button data-category="all" class="cat-filter-btn px-3 py-1 text-xs font-medium rounded-full bg-slate-900 text-white transition">
+          ทั้งหมด (<span id="countAll">0</span>)
+        </button>
+        <button data-category="risk" class="cat-filter-btn px-3 py-1 text-xs font-medium rounded-full bg-slate-100 text-slate-700 hover:bg-purple-100 hover:text-purple-800 transition">
+          <span class="w-2 h-2 rounded-full inline-block bg-purple-600 mr-1.5"></span>
+          ความเสี่ยงและควบคุมภายใน (<span id="countRisk">0</span>)
+        </button>
+        <button data-category="quality" class="cat-filter-btn px-3 py-1 text-xs font-medium rounded-full bg-slate-100 text-slate-700 hover:bg-teal-100 hover:text-teal-800 transition">
+          <span class="w-2 h-2 rounded-full inline-block bg-teal-600 mr-1.5"></span>
+          ระบบบริหารคุณภาพ ISO 9001/CB (<span id="countQuality">0</span>)
+        </button>
+        <button data-category="deadline" class="cat-filter-btn px-3 py-1 text-xs font-medium rounded-full bg-slate-100 text-slate-700 hover:bg-rose-100 hover:text-rose-800 transition">
+          <span class="w-2 h-2 rounded-full inline-block bg-rose-600 mr-1.5"></span>
+          เฉพาะกำหนดส่งงาน (Deadlines) (<span id="countDeadline">0</span>)
+        </button>
+      </div>
+
+      <!-- Search Input -->
+      <div class="relative w-full sm:w-64">
+        <input type="text" id="searchInput" placeholder="ค้นหากิจกรรม, กำหนดส่ง, ระบบ..."
+          class="w-full pl-8 pr-3 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:bg-white transition">
+        <svg class="w-4 h-4 text-slate-400 absolute left-2.5 top-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+        </svg>
+      </div>
+    </div>
+
+    <!-- CALENDAR MONTH VIEW (Matches the attached screenshot) -->
+    <div id="calendarViewSection" class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+      <!-- Calendar Controls Bar: < > Month Year Dropdown -->
+      <div class="px-5 py-3.5 border-b border-slate-200 flex flex-wrap items-center justify-between gap-3 bg-slate-50/50">
+        <div class="flex items-center space-x-2">
+          <!-- Prev Month Button -->
+          <button id="prevMonthBtn" class="p-1.5 rounded-lg border border-slate-200 text-slate-600 hover:bg-white hover:text-slate-900 transition" title="เดือนก่อนหน้า">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+            </svg>
+          </button>
+          <!-- Next Month Button -->
+          <button id="nextMonthBtn" class="p-1.5 rounded-lg border border-slate-200 text-slate-600 hover:bg-white hover:text-slate-900 transition" title="เดือนถัดไป">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+            </svg>
+          </button>
+
+          <!-- Current Month Dropdown Display styled like screenshot "< > ต.ค. 2026 ▾" -->
+          <div class="relative inline-block">
+            <select id="monthSelect" class="appearance-none bg-transparent hover:bg-white font-semibold text-lg text-slate-800 py-1 pl-2 pr-7 rounded-lg border border-transparent hover:border-slate-300 focus:outline-none cursor-pointer transition">
+              <!-- Options populated dynamically: Oct 2026 through Nov 2027 -->
+            </select>
+            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-1 text-slate-600">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Legend / Indicators -->
+        <div class="flex items-center gap-3 text-xs text-slate-600">
+          <div class="flex items-center gap-1.5">
+            <span class="w-2.5 h-2.5 rounded-full bg-purple-600"></span>
+            <span>ความเสี่ยง/ควบคุมภายใน</span>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <span class="w-2.5 h-2.5 rounded-full bg-teal-600"></span>
+            <span>ประกันคุณภาพ ISO</span>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <span class="w-2.5 h-2.5 rounded-full bg-rose-600"></span>
+            <span>กำหนดส่งงานสำคัญ</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Calendar Days Header (อาทิตย์ - เสาร์) -->
+      <div class="grid grid-cols-7 border-b border-slate-200 bg-slate-100/70 text-center text-xs font-semibold text-slate-600 py-2.5">
+        <div class="text-rose-600">อาทิตย์</div>
+        <div>จันทร์</div>
+        <div>อังคาร</div>
+        <div>พุธ</div>
+        <div>พฤหัส</div>
+        <div>ศุกร์</div>
+        <div class="text-slate-500">เสาร์</div>
+      </div>
+
+      <!-- Calendar Grid Cells Container -->
+      <div id="calendarGrid" class="grid grid-cols-7 divide-x divide-y divide-slate-200 bg-slate-200 text-xs">
+        <!-- Cells generated by JavaScript -->
+      </div>
+    </div>
+
+    <!-- TABLE / LIST VIEW (Summary overview of both files) -->
+    <div id="tableViewSection" class="hidden bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+      <div class="px-5 py-4 border-b border-slate-200 flex flex-wrap items-center justify-between gap-3 bg-slate-50/50">
+        <div>
+          <h2 class="font-bold text-slate-800 text-base">ตารางสรุปภาพรวมแผนการส่งงาน ปีงบประมาณ 2570</h2>
+          <p class="text-xs text-slate-500">แสดงรายการงานส่งมอบ การตรวจประเมิน และการประชุมที่เกี่ยวข้องทั้งหมด</p>
+        </div>
+        <div class="text-xs text-slate-600">
+          จำนวนรายการที่แสดง: <span id="tableItemCount" class="font-semibold text-slate-900">0</span> รายการ
+        </div>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-slate-200 text-left text-xs">
+          <thead class="bg-slate-100 text-slate-700 font-semibold">
+            <tr>
+              <th scope="col" class="py-3 px-3 w-28">กำหนดส่งงาน (มธ.)</th>
+              <th scope="col" class="py-3 px-3 w-28 text-tu-red">ส่งภายในกองกิจฯ</th>
+              <th scope="col" class="py-3 px-3 w-32">หมวดหมู่งาน</th>
+              <th scope="col" class="py-3 px-4">กิจกรรม / เอกสารที่ต้องส่งมอบ</th>
+              <th scope="col" class="py-3 px-4 w-44">ผู้รับผิดชอบส่งงาน</th>
+              <th scope="col" class="py-3 px-3 w-36">ระบบ / ช่องทาง</th>
+              <th scope="col" class="py-3 px-2 w-16 text-center">ดูข้อมูล</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody" class="divide-y divide-slate-200 bg-white">
+            <!-- Table rows populated dynamically -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Quick Info Cards for Student Affairs Staff -->
+    <div class="mt-5 grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div class="bg-purple-50/70 border border-purple-200 rounded-xl p-4 text-xs">
+        <div class="flex items-center gap-2 font-bold text-purple-900 mb-1">
+          <span class="p-1 rounded bg-purple-200 text-purple-800">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+          </span>
+          ระบบ TU Risk Dashboard
+        </div>
+        <p class="text-purple-800">
+          ใช้สำหรับนำส่งแผนบริหารความเสี่ยงส่วนงาน (ภายใน 9 ม.ค. 70) และรายงานผลตามรอบ 3 เดือน (9 ม.ค.), 6 เดือน (8 เม.ย.), 9 เดือน (7 ก.ค.)
+        </p>
+      </div>
+
+      <div class="bg-teal-50/70 border border-teal-200 rounded-xl p-4 text-xs">
+        <div class="flex items-center gap-2 font-bold text-teal-900 mb-1">
+          <span class="p-1 rounded bg-teal-200 text-teal-800">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
+          </span>
+          ระบบ e-Smart ISO
+        </div>
+        <p class="text-teal-800">
+          ใช้ตรวจติดตามคุณภาพภายใน (Internal Audit), ดำเนินการแก้ไขและแนบหลักฐานปิด CAR/PAR (เมนู Action Management) ภายใน เม.ย. 70
+        </p>
+      </div>
+
+      <div class="bg-amber-50/70 border border-amber-200 rounded-xl p-4 text-xs">
+        <div class="flex items-center gap-2 font-bold text-amber-900 mb-1">
+          <span class="p-1 rounded bg-amber-200 text-amber-800">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+          </span>
+          เกณฑ์สำคัญการส่งงาน
+        </div>
+        <p class="text-amber-800">
+          ส่งข้อมูลให้งานยุทธศาสตร์ฯ ก่อนวันกำหนดส่งจริง มธ. 3 – 5 วัน และกรรมการบริหารคุณภาพต้องเข้าประชุมทบทวนฝ่ายบริหารไม่น้อยกว่าร้อยละ 75
+        </p>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Event Detail Modal Dialog -->
+  <div id="eventModal" class="fixed inset-0 z-50 hidden bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full shadow-2xl border border-slate-200 overflow-hidden transform transition-all">
+      <div class="px-6 py-4 border-b border-slate-200 flex items-center justify-between bg-slate-50">
+        <div class="flex items-center gap-2">
+          <span id="modalBadge" class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-purple-100 text-purple-800 border border-purple-200">
+            หมวดหมู่
+          </span>
+          <span id="modalDeadlineTag" class="text-xs font-bold px-2 py-0.5 rounded-full bg-rose-100 text-rose-700 hidden">
+            กำหนดส่งงาน
+          </span>
+        </div>
+        <button id="modalCloseBtn" class="text-slate-400 hover:text-slate-600 p-1 rounded-lg hover:bg-slate-200 transition">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+      </div>
+
+      <div class="p-6 space-y-4">
+        <div>
+          <h3 id="modalTitle" class="text-base font-bold text-slate-900 leading-snug">
+            ชื่องาน / เอกสารที่ต้องส่งมอบ
+          </h3>
+          <p id="modalSource" class="text-xs text-slate-500 mt-0.5">
+            แหล่งอ้างอิง: ปฏิทินกองพัฒนาคุณภาพ มหาวิทยาลัยธรรมศาสตร์
+          </p>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3 text-xs bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+          <div>
+            <div class="text-slate-500 font-medium">กำหนดส่งจริง มธ.:</div>
+            <div id="modalDate" class="font-bold text-slate-800 text-sm mt-0.5">-</div>
+          </div>
+          <div>
+            <div class="text-tu-red font-medium">กำหนดส่งภายในกองกิจฯ:</div>
+            <div id="modalInternalDate" class="font-bold text-tu-red text-sm mt-0.5">-</div>
+          </div>
+        </div>
+
+        <div class="space-y-2 text-xs">
+          <div>
+            <span class="font-semibold text-slate-700">ผู้รับผิดชอบส่งงาน:</span>
+            <span id="modalResponsible" class="text-slate-800 ml-1">-</span>
+          </div>
+          <div>
+            <span class="font-semibold text-slate-700">ช่องทาง / ระบบนำส่ง:</span>
+            <span id="modalSystem" class="text-slate-800 ml-1">-</span>
+          </div>
+          <div>
+            <span class="font-semibold text-slate-700">รายละเอียดเพิ่มเติม:</span>
+            <p id="modalDesc" class="text-slate-600 mt-1 leading-relaxed bg-white p-3 rounded-lg border border-slate-200">
+              -
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="px-6 py-3.5 bg-slate-50 border-t border-slate-200 flex justify-end">
+        <button id="modalConfirmBtn" class="px-4 py-2 text-xs font-semibold rounded-lg bg-slate-900 text-white hover:bg-slate-800 transition">
+          ปิดหน้าต่าง
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Day View Modal (when clicking "+อีก X รายการ") -->
+  <div id="dayEventsModal" class="fixed inset-0 z-50 hidden bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-md w-full shadow-2xl border border-slate-200 overflow-hidden">
+      <div class="px-5 py-3.5 border-b border-slate-200 flex items-center justify-between bg-slate-50">
+        <h3 id="dayModalTitle" class="font-bold text-slate-900 text-sm">กิจกรรมทั้งหมด</h3>
+        <button id="dayModalCloseBtn" class="text-slate-400 hover:text-slate-600 p-1 rounded-lg hover:bg-slate-200 transition">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+      </div>
+      <div id="dayModalList" class="p-4 max-h-80 overflow-y-auto space-y-2">
+        <!-- List inserted by JS -->
+      </div>
+    </div>
+  </div>
+
+  <footer class="mt-8 border-t border-slate-200 py-4 bg-white text-center text-xs text-slate-500">
+    ปฏิทินส่งงานด้านประกันคุณภาพและความเสี่ยง ปีงบประมาณ 2570 | กองกิจการนักศึกษา มหาวิทยาลัยธรรมศาสตร์
+  </footer>
+
+  <!-- Complete In-Memory Dataset and Logic -->
+
+  <style>
+    .admin-dialog {border:0;border-radius:18px;padding:24px;width:min(820px,94vw);max-height:90vh;color:#1e293b;box-shadow:0 20px 70px #0004;font-family:inherit}
+    .admin-dialog::backdrop{background:#0f172a88}.admin-dialog h2{font-size:22px;font-weight:700;margin:0}.admin-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:16px 0}
+    .admin-dialog button{border:1px solid #cbd5e1;border-radius:8px;padding:9px 14px;background:white;cursor:pointer;font:inherit;font-size:14px}.admin-dialog button.primary{background:#990000;color:white;border-color:#990000}
+    .admin-dialog input:not([type=checkbox]),.admin-dialog select,.admin-dialog textarea{display:block;box-sizing:border-box;width:100%;border:1px solid #cbd5e1;border-radius:8px;padding:9px;margin-top:5px;font:inherit;background:white}
+    .admin-fields{display:grid;grid-template-columns:1fr 1fr;gap:14px}.admin-fields label{font-size:14px}.admin-wide{grid-column:1/-1}.admin-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid #e2e8f0}.admin-row span{overflow-wrap:anywhere}.admin-note{font-size:13px;color:#64748b;margin:10px 0;line-height:1.7}
+    @media(max-width:600px){.admin-fields{grid-template-columns:1fr}.admin-dialog{padding:18px}.admin-row{align-items:flex-start}}
+  </style>
+  <dialog id="adminDialog" class="admin-dialog" aria-labelledby="adminHeading">
+    <div style="display:flex;justify-content:space-between;gap:12px;align-items:center"><h2 id="adminHeading">จัดการข้อมูลกิจกรรม</h2><button id="adminClose" aria-label="ปิดหน้าจัดการ">ปิด</button></div>
+    <p class="admin-note">ข้อมูลที่บันทึกจะเผยแพร่ในปฏิทินกลางทันที เฉพาะบัญชีที่ได้รับสิทธิ์แอดมินเท่านั้นที่เพิ่มและแก้ไขได้</p>
+    <div class="admin-actions"><button id="addEvent" class="primary">+ เพิ่มกิจกรรม</button><button id="logoutBtn">ออกจากระบบ</button></div>
+    <p id="adminStatus" role="status" class="admin-note"></p>
+    <label for="adminSearch">ค้นหารายการที่ต้องการแก้ไข</label><input id="adminSearch" placeholder="ชื่อกิจกรรม / ผู้รับผิดชอบ">
+    <div id="adminList"></div>
+  </dialog>
+  <dialog id="editorDialog" class="admin-dialog" aria-labelledby="editorHeading">
+    <h2 id="editorHeading">เพิ่มกิจกรรม</h2>
+    <p id="editorStatus" role="alert" class="admin-note"></p>
+    <form id="eventEditor">
+      <div class="admin-fields" style="margin-top:18px">
+        <label class="admin-wide">ชื่อกิจกรรม *<input name="title" required maxlength="500"></label>
+        <label>วันที่เริ่ม * (ค.ศ.)<input name="date" type="date" required></label>
+        <label>วันที่สิ้นสุด (ค.ศ.)<input name="endDate" type="date"></label>
+        <label>หมวดหมู่<select name="category"><option value="risk">ความเสี่ยงและควบคุมภายใน</option><option value="quality">ระบบบริหารคุณภาพ ISO</option></select></label>
+        <label>กำหนดส่งภายใน / สถานะ<input name="internalDate" maxlength="200" placeholder="เช่น ส่งแล้ว หรือ 20 ต.ค. 2569"></label>
+        <label>ผู้รับผิดชอบ<input name="responsible" maxlength="500"></label>
+        <label>ช่องทาง / ระบบ<input name="system" maxlength="500"></label>
+        <label class="admin-wide">แหล่งอ้างอิง<input name="source" maxlength="500"></label>
+        <label class="admin-wide">รายละเอียด<textarea name="description" rows="4" maxlength="10000"></textarea></label>
+        <label class="admin-wide"><input name="isDeadline" type="checkbox"> เป็นกำหนดส่งงาน (Deadline)</label>
+      </div>
+      <div class="admin-actions"><button type="submit" class="primary">บันทึกข้อมูล</button><button type="button" id="cancelEdit">ยกเลิก</button></div>
+    </form>
+  </dialog>
+  <script src="config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.8/dist/umd/supabase.js"></script>
+  <script>
+    // Master Events Database for Fiscal Year 2570 (October 2026 - November 2027)
+    const masterEvents = [];
+
+    // State Variables
+    let currentCategory = "all";
+    let searchQuery = "";
+    // Default starting month: October 2026 (ต.ค. 2569) to match user screenshot!
+    let currentYear = new Date().getFullYear();
+    let currentMonth = new Date().getMonth(); // 0-indexed: 9 = October
+
+    const thaiMonthNames = [
+      "ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.",
+      "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค."
+    ];
+
+    const thaiFullMonthNames = [
+      "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน",
+      "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"
+    ];
+
+    // Fiscal Year Month List: Oct 2026 to Nov 2027
+    const availableMonths = [
+      { year: 2026, month: 9, label: "ต.ค. 2026 (ต.ค. 2569)" },
+      { year: 2026, month: 10, label: "พ.ย. 2026 (พ.ย. 2569)" },
+      { year: 2026, month: 11, label: "ธ.ค. 2026 (ธ.ค. 2569)" },
+      { year: 2027, month: 0, label: "ม.ค. 2027 (ม.ค. 2570)" },
+      { year: 2027, month: 1, label: "ก.พ. 2027 (ก.พ. 2570)" },
+      { year: 2027, month: 2, label: "มี.ค. 2027 (มี.ค. 2570)" },
+      { year: 2027, month: 3, label: "เม.ย. 2027 (เม.ย. 2570)" },
+      { year: 2027, month: 4, label: "พ.ค. 2027 (พ.ค. 2570)" },
+      { year: 2027, month: 5, label: "มิ.ย. 2027 (มิ.ย. 2570)" },
+      { year: 2027, month: 6, label: "ก.ค. 2027 (ก.ค. 2570)" },
+      { year: 2027, month: 7, label: "ส.ค. 2027 (ส.ค. 2570)" },
+      { year: 2027, month: 8, label: "ก.ย. 2027 (ก.ย. 2570)" },
+      { year: 2027, month: 9, label: "ต.ค. 2027 (ต.ค. 2570)" },
+      { year: 2027, month: 10, label: "พ.ย. 2027 (พ.ย. 2570)" }
+    ];
+
+    // Initialize Dropdown
+    function populateMonthSelect() {
+      const select = document.getElementById("monthSelect");
+      select.innerHTML = "";
+      availableMonths.forEach(m => {
+        const opt = document.createElement("option");
+        opt.value = `${m.year}-${m.month}`;
+        opt.textContent = `${thaiMonthNames[m.month]} ${m.year} (${thaiMonthNames[m.month]} ${m.year + 543})`;
+        if (m.year === currentYear && m.month === currentMonth) {
+          opt.selected = true;
+        }
+        select.appendChild(opt);
+      });
+    }
+
+    // Filter Helper
+    function getFilteredEvents() {
+      return masterEvents.filter(evt => {
+        // Category check
+        if (currentCategory === "risk" && evt.category !== "risk") return false;
+        if (currentCategory === "quality" && evt.category !== "quality") return false;
+        if (currentCategory === "deadline" && !evt.isDeadline) return false;
+
+        // Search check
+        if (searchQuery.trim() !== "") {
+          const q = searchQuery.toLowerCase();
+          const matchTitle = evt.title.toLowerCase().includes(q);
+          const matchResp = evt.responsible.toLowerCase().includes(q);
+          const matchSys = evt.system.toLowerCase().includes(q);
+          const matchDesc = evt.description.toLowerCase().includes(q);
+          if (!matchTitle && !matchResp && !matchSys && !matchDesc) return false;
+        }
+        return true;
+      });
+    }
+
+    // Update Counts in Filter Pills
+    function updateCounts() {
+      const all = masterEvents.length;
+      const risk = masterEvents.filter(e => e.category === "risk").length;
+      const quality = masterEvents.filter(e => e.category === "quality").length;
+      const deadline = masterEvents.filter(e => e.isDeadline).length;
+
+      document.getElementById("countAll").textContent = all;
+      document.getElementById("countRisk").textContent = risk;
+      document.getElementById("countQuality").textContent = quality;
+      document.getElementById("countDeadline").textContent = deadline;
+    }
+
+    // Render Month Calendar Grid (exact look of screenshot)
+    function renderCalendar() {
+      const grid = document.getElementById("calendarGrid");
+      grid.innerHTML = "";
+
+      // Compute first day of month and total days
+      const firstDay = new Date(currentYear, currentMonth, 1).getDay(); // 0 = Sunday
+      const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+      const prevMonthDays = new Date(currentYear, currentMonth, 0).getDate();
+
+      const filtered = getFilteredEvents();
+
+      // Cells to draw: previous month trailing days
+      for (let i = firstDay - 1; i >= 0; i--) {
+        const d = prevMonthDays - i;
+        const cell = document.createElement("div");
+        cell.className = "calendar-cell bg-slate-50 p-1.5 flex flex-col opacity-40 hover:opacity-75 transition";
+        cell.innerHTML = `
+          <div class="text-right text-slate-400 font-semibold mb-1">${d}</div>
+          <div class="flex-1 space-y-1 overflow-hidden"></div>
+        `;
+        grid.appendChild(cell);
+      }
+
+      // Current month days
+      for (let d = 1; d <= daysInMonth; d++) {
+        const monthStr = String(currentMonth + 1).padStart(2, '0');
+        const dayStr = String(d).padStart(2, '0');
+        const dateKey = `${currentYear}-${monthStr}-${dayStr}`;
+
+        // Find events on this date
+        const dayEvents = filtered.filter(evt => {
+          if (evt.date === dateKey) return true;
+          if (evt.endDate && evt.date <= dateKey && evt.endDate >= dateKey) {
+            // multi-day event: show on start date or if single day
+            return true;
+          }
+          return false;
+        });
+
+        // Special highlight for active day or today
+        const isOct16 = (currentYear === new Date().getFullYear() && currentMonth === new Date().getMonth() && d === new Date().getDate());
+
+        const cell = document.createElement("div");
+        cell.className = "calendar-cell bg-white p-1.5 flex flex-col hover:bg-slate-50/80 transition relative group cursor-pointer";
+        
+        let dayHeaderHtml = `<div class="text-right font-semibold mb-1 text-slate-700">${d}</div>`;
+        if (isOct16) {
+          // Highlight circle matching screenshot
+          dayHeaderHtml = `
+            <div class="flex justify-end mb-1">
+              <span class="w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-xs shadow-sm">
+                ${d}
+              </span>
+            </div>
+          `;
+        }
+
+        let eventsHtml = `<div class="flex-1 space-y-1 overflow-hidden">`;
+
+        // Render up to 2 events, and overflow badge "+อีก X รายการ" if more
+        const maxDisplay = 2;
+        dayEvents.slice(0, maxDisplay).forEach(evt => {
+          let badgeClass = "bg-purple-100 text-purple-900 border-purple-200 hover:bg-purple-200";
+          if (evt.category === "quality") {
+            badgeClass = "bg-teal-100 text-teal-900 border-teal-200 hover:bg-teal-200";
+          }
+          if (evt.isDeadline) {
+            badgeClass = "bg-rose-100 text-rose-900 border-rose-300 font-medium hover:bg-rose-200";
+          }
+
+          eventsHtml += `
+            <div data-event-id="${escapeHtml(evt.id)}" class="event-pill text-[11px] px-1.5 py-0.5 rounded truncate border ${badgeClass} cursor-pointer transition shadow-xs" title="${escapeHtml(evt.title)}">
+              ${evt.isDeadline ? '★ ' : ''}${escapeHtml(evt.title)}
+            </div>
+          `;
+        });
+
+        if (dayEvents.length > maxDisplay) {
+          const rem = dayEvents.length - maxDisplay;
+          eventsHtml += `
+            <div data-day-key="${dateKey}" class="more-events-pill text-[10px] px-1 py-0.5 rounded bg-slate-200 text-slate-700 font-medium cursor-pointer hover:bg-slate-300 transition text-center">
+              อีก ${rem} รายการ
+            </div>
+          `;
+        }
+
+        eventsHtml += `</div>`;
+
+        cell.innerHTML = dayHeaderHtml + eventsHtml;
+
+        // Click on cell or pill to view
+        cell.addEventListener("click", (e) => {
+          const pill = e.target.closest(".event-pill");
+          if (pill) {
+            const evtId = pill.getAttribute("data-event-id");
+            showEventModal(evtId);
+            return;
+          }
+          const morePill = e.target.closest(".more-events-pill");
+          if (morePill) {
+            showDayEventsModal(dateKey, dayEvents);
+            return;
+          }
+          if (dayEvents.length === 1) {
+            showEventModal(dayEvents[0].id);
+          } else if (dayEvents.length > 1) {
+            showDayEventsModal(dateKey, dayEvents);
+          }
+        });
+
+        grid.appendChild(cell);
+      }
+
+      // Trailing days for grid completeness (total 35 or 42 cells)
+      const totalRendered = firstDay + daysInMonth;
+      const remainingCells = (totalRendered <= 35) ? (35 - totalRendered) : (42 - totalRendered);
+      for (let i = 1; i <= remainingCells; i++) {
+        const cell = document.createElement("div");
+        cell.className = "calendar-cell bg-slate-50 p-1.5 flex flex-col opacity-40 hover:opacity-75 transition";
+        cell.innerHTML = `
+          <div class="text-right text-slate-400 font-semibold mb-1">${i}</div>
+          <div class="flex-1 space-y-1 overflow-hidden"></div>
+        `;
+        grid.appendChild(cell);
+      }
+    }
+
+    // Render Table View
+    function renderTable() {
+      const tbody = document.getElementById("tableBody");
+      tbody.innerHTML = "";
+
+      const filtered = getFilteredEvents();
+      document.getElementById("tableItemCount").textContent = filtered.length;
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="7" class="py-8 text-center text-slate-400">
+              ไม่พบรายการที่ตรงกับเงื่อนไขการค้นหา
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      // Sort chronological
+      filtered.sort((a, b) => a.date.localeCompare(b.date));
+
+      filtered.forEach(evt => {
+        const tr = document.createElement("tr");
+        tr.className = "hover:bg-slate-50 transition cursor-pointer";
+
+        // Format thai date
+        const parts = evt.date.split("-");
+        const yr = parseInt(parts[0]) + 543;
+        const mo = thaiMonthNames[parseInt(parts[1]) - 1];
+        const day = parseInt(parts[2]);
+        const displayDate = `${day} ${mo} ${yr}`;
+
+        let catBadge = `<span class="px-2 py-0.5 rounded-full text-[11px] font-semibold bg-purple-100 text-purple-800">ความเสี่ยงฯ</span>`;
+        if (evt.category === "quality") {
+          catBadge = `<span class="px-2 py-0.5 rounded-full text-[11px] font-semibold bg-teal-100 text-teal-800">ระบบคุณภาพ ISO</span>`;
+        }
+
+        tr.innerHTML = `
+          <td class="py-3 px-3 font-semibold text-slate-900 whitespace-nowrap">
+            ${displayDate}
+          </td>
+          <td class="py-3 px-3 font-bold text-tu-red whitespace-nowrap">
+            ${escapeHtml(evt.internalDate || '-')}
+          </td>
+          <td class="py-3 px-3">
+            ${catBadge}
+          </td>
+          <td class="py-3 px-4">
+            <div class="font-bold text-slate-900 text-xs">${escapeHtml(evt.title)}</div>
+            <div class="text-[11px] text-slate-500 line-clamp-1">${escapeHtml(evt.description)}</div>
+          </td>
+          <td class="py-3 px-4 text-slate-700 text-xs">
+            ${escapeHtml(evt.responsible)}
+          </td>
+          <td class="py-3 px-3 text-slate-600 text-xs">
+            ${escapeHtml(evt.system)}
+          </td>
+          <td class="py-3 px-2 text-center">
+            <button class="p-1 rounded bg-slate-100 hover:bg-slate-200 text-slate-600 transition" title="ดูรายละเอียด">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+            </button>
+          </td>
+        `;
+
+        tr.addEventListener("click", () => {
+          showEventModal(evt.id);
+        });
+
+        tbody.appendChild(tr);
+      });
+    }
+
+    // Modal Display Functions
+    function showEventModal(evtId) {
+      const evt = masterEvents.find(e => e.id === evtId);
+      if (!evt) return;
+
+      const badge = document.getElementById("modalBadge");
+      if (evt.category === "risk") {
+        badge.className = "text-xs font-semibold px-2.5 py-0.5 rounded-full bg-purple-100 text-purple-800 border border-purple-200";
+        badge.textContent = "บริหารความเสี่ยงและควบคุมภายใน";
+      } else {
+        badge.className = "text-xs font-semibold px-2.5 py-0.5 rounded-full bg-teal-100 text-teal-800 border border-teal-200";
+        badge.textContent = "ระบบบริหารคุณภาพ ISO 9001/CB";
+      }
+
+      const dlTag = document.getElementById("modalDeadlineTag");
+      if (evt.isDeadline) {
+        dlTag.classList.remove("hidden");
+      } else {
+        dlTag.classList.add("hidden");
+      }
+
+      // Format thai date
+      const parts = evt.date.split("-");
+      const yr = parseInt(parts[0]) + 543;
+      const mo = thaiFullMonthNames[parseInt(parts[1]) - 1];
+      const day = parseInt(parts[2]);
+      const dateText = `${day} ${mo} ${yr}`;
+
+      document.getElementById("modalTitle").textContent = evt.title;
+      document.getElementById("modalSource").textContent = `แหล่งอ้างอิง: ${evt.source}`;
+      document.getElementById("modalDate").textContent = dateText;
+      document.getElementById("modalInternalDate").textContent = evt.internalDate || '-';
+      document.getElementById("modalResponsible").textContent = evt.responsible;
+      document.getElementById("modalSystem").textContent = evt.system;
+      document.getElementById("modalDesc").textContent = evt.description;
+
+      document.getElementById("eventModal").classList.remove("hidden");
+    }
+
+    function showDayEventsModal(dateKey, events) {
+      const parts = dateKey.split("-");
+      const yr = parseInt(parts[0]) + 543;
+      const mo = thaiFullMonthNames[parseInt(parts[1]) - 1];
+      const day = parseInt(parts[2]);
+
+      document.getElementById("dayModalTitle").textContent = `กิจกรรมวันที่ ${day} ${mo} ${yr} (${events.length} รายการ)`;
+
+      const list = document.getElementById("dayModalList");
+      list.innerHTML = "";
+
+      events.forEach(evt => {
+        let badgeColor = "border-purple-300 bg-purple-50 text-purple-900";
+        if (evt.category === "quality") badgeColor = "border-teal-300 bg-teal-50 text-teal-900";
+        if (evt.isDeadline) badgeColor = "border-rose-300 bg-rose-50 text-rose-900";
+
+        const div = document.createElement("div");
+        div.className = `p-2.5 rounded-lg border ${badgeColor} cursor-pointer hover:shadow-xs transition`;
+        div.innerHTML = `
+          <div class="font-bold text-xs">${evt.isDeadline ? '★ ' : ''}${escapeHtml(evt.title)}</div>
+          <div class="text-[11px] text-slate-600 mt-0.5">ผู้รับผิดชอบ: ${escapeHtml(evt.responsible)}</div>
+          <div class="text-[11px] text-slate-500">ช่องทาง: ${escapeHtml(evt.system)}</div>
+        `;
+        div.addEventListener("click", () => {
+          document.getElementById("dayEventsModal").classList.add("hidden");
+          showEventModal(evt.id);
+        });
+        list.appendChild(div);
+      });
+
+      document.getElementById("dayEventsModal").classList.remove("hidden");
+    }
+
+    // Setup Event Listeners
+    function setupListeners() {
+      // Month navigation
+      document.getElementById("prevMonthBtn").addEventListener("click", () => {
+        const idx = availableMonths.findIndex(m => m.year === currentYear && m.month === currentMonth);
+        if (idx > 0) {
+          currentYear = availableMonths[idx - 1].year;
+          currentMonth = availableMonths[idx - 1].month;
+          populateMonthSelect();
+          renderCalendar();
+        }
+      });
+
+      document.getElementById("nextMonthBtn").addEventListener("click", () => {
+        const idx = availableMonths.findIndex(m => m.year === currentYear && m.month === currentMonth);
+        if (idx < availableMonths.length - 1) {
+          currentYear = availableMonths[idx + 1].year;
+          currentMonth = availableMonths[idx + 1].month;
+          populateMonthSelect();
+          renderCalendar();
+        }
+      });
+
+      document.getElementById("monthSelect").addEventListener("change", (e) => {
+        const val = e.target.value;
+        const [yr, mo] = val.split("-").map(Number);
+        currentYear = yr;
+        currentMonth = mo;
+        renderCalendar();
+      });
+
+      // Today Button (Oct 2026)
+      document.getElementById("todayBtn").addEventListener("click", () => {
+        currentYear = new Date().getFullYear();
+        currentMonth = new Date().getMonth();
+        ensureMonth(currentYear, currentMonth);
+        populateMonthSelect();
+        renderCalendar();
+      });
+
+      // View Toggle
+      const viewMonthBtn = document.getElementById("viewMonthBtn");
+      const viewTableBtn = document.getElementById("viewTableBtn");
+      const calendarView = document.getElementById("calendarViewSection");
+      const tableView = document.getElementById("tableViewSection");
+
+      viewMonthBtn.addEventListener("click", () => {
+        calendarView.classList.remove("hidden");
+        tableView.classList.add("hidden");
+        viewMonthBtn.className = "flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-white text-slate-900 shadow-sm transition";
+        viewTableBtn.className = "flex items-center gap-1.5 px-3 py-1.5 rounded-md text-slate-600 hover:text-slate-900 transition";
+      });
+
+      viewTableBtn.addEventListener("click", () => {
+        calendarView.classList.add("hidden");
+        tableView.classList.remove("hidden");
+        renderTable();
+        viewTableBtn.className = "flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-white text-slate-900 shadow-sm transition";
+        viewMonthBtn.className = "flex items-center gap-1.5 px-3 py-1.5 rounded-md text-slate-600 hover:text-slate-900 transition";
+      });
+
+      // Category filter buttons
+      document.querySelectorAll(".cat-filter-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          document.querySelectorAll(".cat-filter-btn").forEach(b => {
+            b.className = "cat-filter-btn px-3 py-1 text-xs font-medium rounded-full bg-slate-100 text-slate-700 hover:bg-slate-200 transition";
+          });
+          btn.className = "cat-filter-btn px-3 py-1 text-xs font-medium rounded-full bg-slate-900 text-white transition";
+          currentCategory = btn.getAttribute("data-category");
+          renderCalendar();
+          renderTable();
+        });
+      });
+
+      // Search input
+      document.getElementById("searchInput").addEventListener("input", (e) => {
+        searchQuery = e.target.value;
+        renderCalendar();
+        renderTable();
+      });
+
+      // Modal close listeners
+      document.getElementById("modalCloseBtn").addEventListener("click", () => {
+        document.getElementById("eventModal").classList.add("hidden");
+      });
+      document.getElementById("modalConfirmBtn").addEventListener("click", () => {
+        document.getElementById("eventModal").classList.add("hidden");
+      });
+      document.getElementById("dayModalCloseBtn").addEventListener("click", () => {
+        document.getElementById("dayEventsModal").classList.add("hidden");
+      });
+
+      // Close modals on clicking backdrop
+      window.addEventListener("click", (e) => {
+        const modal1 = document.getElementById("eventModal");
+        if (e.target === modal1) modal1.classList.add("hidden");
+        const modal2 = document.getElementById("dayEventsModal");
+        if (e.target === modal2) modal2.classList.add("hidden");
+      });
+    }
+
+    // Initialize App
+    window.addEventListener("DOMContentLoaded", () => {
+      ensureMonth(currentYear, currentMonth);
+      populateMonthSelect();
+      updateCounts();
+      renderCalendar();
+      renderTable();
+      setupListeners();
+    });
+
+    function escapeHtml(value) {
+      return String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    }
+  </script>
+  <script src="app.js"></script>
+</body>
+</html>
